@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Rss> {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportLoaderManager.initLoader(1, null, this)
+        LoaderManager.getInstance(this).initLoader(1, null, this)
 
         createChannel(this)
 
