@@ -1,5 +1,8 @@
 package com.example.rssreader
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +12,7 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Rss> {
 
@@ -17,6 +21,17 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Rss> {
         setContentView(R.layout.activity_main)
 
         supportLoaderManager.initLoader(1, null, this)
+
+        createChannel(this)
+
+        val fetchJob = JobInfo.Builder(1, ComponentName(this, PollingJob::class.java))
+            .setPeriodic(TimeUnit.HOURS.toMillis(6)) // 6時間ごとに実行
+            .setPersisted(true) // 端末再起動でも有効
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // ネットワーク接続要
+            .build()
+
+        getSystemService(JobScheduler::class.java).schedule(fetchJob)
+
     }
 
     override fun onCreateLoader(p0: Int, p1: Bundle?) = RssLoader(this)

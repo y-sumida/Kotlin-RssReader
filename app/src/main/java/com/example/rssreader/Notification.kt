@@ -35,6 +35,7 @@ fun notifyUpdate(context: Context) {
     val notification = NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle("記事が更新されました")
         .setContentText("新しい記事をチェックしましょう")
+        .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.ic_notification)
         .setAutoCancel(true)
         .build()
